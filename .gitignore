@@ -1,0 +1,29 @@
+# macOS
+.DS_Store
+.AppleDouble
+.LSOverride
+
+# VSCode
+.vscode/
+
+# Python
+__pycache__/
+*.pyc
+*.pyo
+.env
+venv/
+*.egg-info/
+
+# Node
+node_modules/
+.next/
+dist/
+.env.local
+.env*.local
+
+# Misc
+*.zip
+uploads/
+
+#vscode workspace
+*.code-workspace
