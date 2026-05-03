@@ -1,6 +1,6 @@
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
-
+import uvicorn
 from app.routes.health import router as health_router
 from app.routes.workspaces import router as workspaces_router
 from app.routes.sources import router as sources_router
@@ -38,3 +38,6 @@ app.include_router(sources_router)
 app.include_router(sources_attach_router)
 app.include_router(dashboard_router)
 app.include_router(deepdive_router)
+
+if __name__ == "__main__":
+    uvicorn.run(app, host="127.0.0.1", port=8000)

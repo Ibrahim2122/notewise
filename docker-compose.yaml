@@ -1,0 +1,24 @@
+services:
+  frontend:
+    build:
+      context: ./notewise-frontend
+      dockerfile: Dockerfile
+      args:
+        - NEXT_PUBLIC_ENTRA_TENANT_NAME
+        - NEXT_PUBLIC_ENTRA_TENANT_ID
+        - NEXT_PUBLIC_SPA_CLIENT_ID
+        - NEXT_PUBLIC_API_CLIENT_ID
+        - NEXT_PUBLIC_REDIRECT_URI
+    ports:
+      - "3000:80"
+    env_file:
+      - ./notewise-frontend/.env.local
+
+  backend:
+    build:
+      context: ./notewise-backend-v2
+      dockerfile: Dockerfile
+    env_file:
+      - ./notewise-backend-v2/.env
+    ports:
+      - "8000:8000"

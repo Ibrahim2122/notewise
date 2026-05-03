@@ -13,7 +13,7 @@ import { Input } from "@/components/ui/input";
 import { Plus, Search, FolderOpen } from "lucide-react";
 
 export default function DashboardPage() {
-  const { isAuthenticated, loading } = useAuth();
+  const { isAuthenticated } = useAuth();
   const router = useRouter();
   const [workspaces, setWorkspaces] = useState<WorkspaceCard[]>([]);
   const [search, setSearch] = useState("");
@@ -21,10 +21,10 @@ export default function DashboardPage() {
   const [modalOpen, setModalOpen] = useState(false);
 
   useEffect(() => {
-    if (!loading && !isAuthenticated) {
+    if (!isAuthenticated) {
       router.push("/auth");
     }
-  }, [isAuthenticated, loading, router]);
+  }, [isAuthenticated, router]);
 
   const fetchWorkspaces = useCallback(async () => {
     setFetching(true);
@@ -52,7 +52,7 @@ export default function DashboardPage() {
     );
   });
 
-  if (loading || (!isAuthenticated && !loading)) return null;
+  if (!isAuthenticated) return null;
 
   return (
     <div className="flex min-h-screen flex-col bg-background">

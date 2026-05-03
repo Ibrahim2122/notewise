@@ -26,7 +26,7 @@ export default function WorkspacePage({
   params: Promise<{ id: string }>;
 }) {
   const { id } = use(params);
-  const { isAuthenticated, loading: authLoading } = useAuth();
+  const { isAuthenticated, isLoading: authLoading } = useAuth();
   const router = useRouter();
 
   const [workspace, setWorkspace] = useState<Workspace | null>(null);

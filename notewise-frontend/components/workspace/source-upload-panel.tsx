@@ -164,12 +164,13 @@ export function SourceUploadPanel({
       });
 
       // Step 4: finalize
-      const finalised = await completeUpload(
+      const completed = await completeUpload(
         source.id,
         blob_path,
         file.type || "application/octet-stream",
         file.name,
       );
+      const finalised: Source = { ...source, ...completed };
       onSourceAdded(finalised);
 
       // Step 5: poll until processing completes
