@@ -18,3 +18,8 @@ terraform {
     key                  = "terraform.tfstate"
   }
 }
+
+# resource "azurerm_resource_group" "rg" {
+#   name     = "terraform-rg" #change here
+#   location = "eastus"
+# }
