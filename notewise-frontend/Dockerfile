@@ -1,14 +1,21 @@
-FROM node:22-slim
+# ──────────────────────────────────────────
+# Stage 1: deps — install dependencies
+# ──────────────────────────────────────────
+FROM node:22-alpine
 
 RUN corepack enable && corepack prepare pnpm@latest --activate
 
 WORKDIR /app
 
-COPY package*.json pnpm-lock.yaml .env.local ./
+COPY package*.json pnpm-lock.yaml ./
 
-RUN pnpm install --no-frozen-lockfile
+RUN pnpm install --no-frozen-lockfile --ignore-scripts
+
+RUN pnpm rebuild sharp
 
 COPY . .
+
+RUN --mount=type=secret,id=envfile,target=/app/.env.local pnpm build
 
 RUN pnpm run build
 
