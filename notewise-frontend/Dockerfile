@@ -17,8 +17,6 @@ COPY . .
 
 RUN --mount=type=secret,id=envfile,target=/app/.env.local pnpm build
 
-RUN pnpm run build
-
 EXPOSE 80
 
 CMD [ "pnpm", "start", "-p", "80" ]

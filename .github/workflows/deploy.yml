@@ -59,12 +59,23 @@ jobs:
           tenant-id: ${{ secrets.ARM_TENANT_ID }}
           subscription-id: ${{ secrets.ARM_SUBSCRIPTION_ID }}
 
+      - name: Create .env.local from GitHub Secretes
+        run: |
+          echo "NEXT_PUBLIC_REDIRECT_URI=${{ secrets.NEXT_PUBLIC_REDIRECT_URI }}" > .env.local
+          echo "NEXT_PUBLIC_SPA_CLIENT_ID=${{ secrets.NEXT_PUBLIC_SPA_CLIENT_ID }}" >> .env.local
+          echo "NEXT_PUBLIC_API_CLIENT_ID=${{ secrets.NEXT_PUBLIC_API_CLIENT_ID }}" >> .env.local
+          echo "NEXT_PUBLIC_ENTRA_TENANT_ID=${{ secrets.NEXT_PUBLIC_ENTRA_TENANT_ID }}" >> .env.local
+          echo "NEXT_PUBLIC_ENTRA_TENANT_NAME=${{ secrets.NEXT_PUBLIC_ENTRA_TENANT_NAME }}" >> .env.local
+
       - name: Login to Azure Container Registry
         run: az acr login --name ${{ secrets.ACR_LOGIN_SERVER }}
 
       - name: Build Docker Image
         run: |
-          docker build -t ${{ secrets.ACR_LOGIN_SERVER }}/notewise-frontend:latest ./notewise-frontend
+          docker build \
+            --secret id=envfile,src=.env.local \
+            -p 3000:80 \
+            -t ${{ secrets.ACR_LOGIN_SERVER }}/notewise-frontend:latest ./notewise-frontend
 
       - name: Push Docker Image to ACR
         run: |
