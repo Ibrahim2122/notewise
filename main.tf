@@ -21,7 +21,7 @@ terraform {
 
 resource "azurerm_resource_group" "notewise" {
   name     = "notewise" #change here
-  location = "eastus"
+  location = "polandcentral"
 }
 
 resource "azurerm_storage_account" "notewise" {
