@@ -55,7 +55,7 @@ resource "azurerm_postgresql_flexible_server_database" "notewise_db" {
   name                = "notewise-db"
   server_id           = azurerm_postgresql_flexible_server.notewise_server.id
   charset             = "UTF8"
-  collation           = "en_US.UTF8"
+  collation           = "en_US.utf8"
 }
 
 resource "azurerm_postgresql_flexible_server_firewall_rule" "allow_azure_services" {
