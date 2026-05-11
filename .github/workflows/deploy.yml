@@ -64,7 +64,7 @@ jobs:
           echo "NEXT_PUBLIC_REDIRECT_URI=${{ secrets.NEXT_PUBLIC_REDIRECT_URI }}" > .env.local
           echo "NEXT_PUBLIC_SPA_CLIENT_ID=${{ secrets.NEXT_PUBLIC_SPA_CLIENT_ID }}" >> .env.local
           echo "NEXT_PUBLIC_API_CLIENT_ID=${{ secrets.NEXT_PUBLIC_API_CLIENT_ID }}" >> .env.local
-          echo "NEXT_PUBLIC_ENTRA_TENANT_ID=${{ secrets.NEXT_PUBLIC_ENTRA_TENANT_ID }}" >> .env.local
+          echo "NEXT_PUBLIC_ENTRA_TENANT_ID=${{ secrets.ARM_TENANT_ID }}" >> .env.local
           echo "NEXT_PUBLIC_ENTRA_TENANT_NAME=${{ secrets.NEXT_PUBLIC_ENTRA_TENANT_NAME }}" >> .env.local
 
       - name: Login to Azure Container Registry
