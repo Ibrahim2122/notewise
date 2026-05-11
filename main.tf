@@ -42,7 +42,7 @@ resource "azurerm_postgresql_flexible_server" "notewise_db" {
   name                = "notewise-db"
   location            = azurerm_resource_group.notewise.location
   resource_group_name = azurerm_resource_group.notewise.name
-  version             = "18"
+  version             = "16"
   administrator_login          = "notewise"
   administrator_password = "Password1234"
   sku_name   = "B_Standard_B1ms"
