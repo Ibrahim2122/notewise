@@ -96,9 +96,12 @@ jobs:
           tenant-id: ${{ secrets.ARM_TENANT_ID }}
           subscription-id: ${{ secrets.ARM_SUBSCRIPTION_ID }}
 
+      - name: Debug folder structure
+        run: ls -R
+
       - name: Create .env from GitHub Secretes
         run: |
-          echo "DATABASE_URL=${{ secrets.DATABASE_URL }}" > notewise-backend/.env
+          echo "DATABASE_URL=${{ secrets.DATABASE_URL }}" >> notewise-backend/.env
           echo "AZURE_STORAGE_ACCOUNT_NAME=${{ secrets.NEXT_PUBLIC_ENTRA_TENANT_NAME }}" >> notewise-backend/.env
           echo "AZURE_STORAGE_ACCOUNT_KEY=${{ secrets.AZURE_STORAGE_ACCOUNT_KEY }}" >> notewise-backend/.env
           echo "AZURE_STORAGE_CONNECTION_STRING=${{ secrets.AZURE_STORAGE_CONNECTION_STRING }}" >> notewise-backend/.env
