@@ -23,3 +23,11 @@ resource "azurerm_resource_group" "notewise" {
   name     = "notewise" #change here
   location = "eastus"
 }
+
+resource "azurerm_storage_account" "notewise" {
+    name                = "notewise"
+    resource_group_name = azurerm_resource_group.notewise.name
+    location            = azurerm_resource_group.notewise.location
+    account_tier        = "Standard"
+    account_replication_type = "LRS"
+}
