@@ -38,8 +38,8 @@ resource "azurerm_storage_container" "notewise" {
   container_access_type = "private"
 }
 
-resource "azurerm_postgresql_flexible_server" "notewise_db" {
-  name                = "notewise-db"
+resource "azurerm_postgresql_flexible_server" "notewise_server" {
+  name                = "notewise-server"
   location            = azurerm_resource_group.notewise.location
   resource_group_name = azurerm_resource_group.notewise.name
   version             = "16"
@@ -51,18 +51,16 @@ resource "azurerm_postgresql_flexible_server" "notewise_db" {
   geo_redundant_backup_enabled = false
 }
 
-resource "azurerm_postgresql_database" "notewise_db" {
+resource "azurerm_postgresql_flexible_server_database" "notewise_db" {
   name                = "notewise-db"
-  resource_group_name = azurerm_resource_group.notewise.name
-  server_name         = azurerm_postgresql_flexible_server.notewise_db.name
+  server_id           = azurerm_postgresql_flexible_server.notewise_server.id
   charset             = "UTF8"
   collation           = "English_United States.1252"
 }
 
-resource "azurerm_postgresql_firewall_rule" "allow_azure_services" {
+resource "azurerm_postgresql_flexible_server_firewall_rule" "allow_azure_services" {
   name                = "allow-app"
-  resource_group_name = azurerm_resource_group.notewise.name
-  server_name         = azurerm_postgresql_flexible_server.notewise_db.name
+  server_id           = azurerm_postgresql_flexible_server.notewise_server.id
   start_ip_address    = "0.0.0.0"
   end_ip_address      = "255.255.255.255"
 }
