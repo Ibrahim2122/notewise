@@ -113,7 +113,7 @@ jobs:
       - name: Build Docker Image
         run: |
           docker build \
-            --secret id=envfile,src=.env \
+            --secret id=envfile,src=envfile \
             -t ${{ secrets.ACR_LOGIN_SERVER }}/notewise-backend:latest ./notewise-backend
 
       - name: Push Docker Image to ACR
