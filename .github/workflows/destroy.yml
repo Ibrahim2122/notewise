@@ -8,10 +8,8 @@ jobs:
   destroy:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v3
-
-      - name: Setup Terraform
-        uses: hashicorp/setup-terraform@v2
+      - name: Checkout Code
+        uses: actions/checkout@v3
 
       - name: set-variables
         shell: "pwsh"
@@ -27,10 +25,10 @@ jobs:
         with:
           terraform_version: 1.5.0
 
-      - name: Terraform Init
+      - name: Initialize Terraform
         shell: "pwsh"
         run: terraform init
 
-      - name: Terraform Destroy
+      - name: Destroy Terraform Resources
         shell: "pwsh"
         run: terraform destroy -auto-approve
