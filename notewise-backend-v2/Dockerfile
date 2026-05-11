@@ -12,6 +12,9 @@ RUN chmod +x entrypoint.sh
 
 COPY . .
 
+RUN --mount=type=secret,id=envfile,target=/run/secrets/envfile \
+    cp /run/secrets/envfile /app/.env
+
 EXPOSE 8000
 
 CMD [ "./entrypoint.sh" ]
