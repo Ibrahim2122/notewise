@@ -98,14 +98,14 @@ jobs:
 
       - name: Create .env from GitHub Secretes
         run: |
-          echo "DATABASE_URL=${{ secrets.DATABASE_URL }}" > .env.local
-          echo "AZURE_STORAGE_ACCOUNT_NAME=${{ secrets.NEXT_PUBLIC_ENTRA_TENANT_NAME }}" >> .env.local
-          echo "AZURE_STORAGE_ACCOUNT_KEY=${{ secrets.AZURE_STORAGE_ACCOUNT_KEY }}" >> .env.local
-          echo "AZURE_STORAGE_CONNECTION_STRING=${{ secrets.AZURE_STORAGE_CONNECTION_STRING }}" >> .env.local
-          echo "AZURE_SAS_TTL_MINUTES=${{ secrets.AZURE_SAS_TTL_MINUTES }}" >> .env.local
-          echo "ENTRA_TENANT_ID=${{ secrets.ARM_TENANT_ID }}" >> .env.local
-          echo "ENTRA_TENANT_NAME=${{ secrets.NEXT_PUBLIC_ENTRA_TENANT_NAME }}" >> .env.local
-          echo "API_CLIENT_ID=${{ secrets.NEXT_PUBLIC_API_CLIENT_ID }}" >> .env.local
+          echo "DATABASE_URL=${{ secrets.DATABASE_URL }}" > notewise-backend/.env
+          echo "AZURE_STORAGE_ACCOUNT_NAME=${{ secrets.NEXT_PUBLIC_ENTRA_TENANT_NAME }}" >> notewise-backend/.env
+          echo "AZURE_STORAGE_ACCOUNT_KEY=${{ secrets.AZURE_STORAGE_ACCOUNT_KEY }}" >> notewise-backend/.env
+          echo "AZURE_STORAGE_CONNECTION_STRING=${{ secrets.AZURE_STORAGE_CONNECTION_STRING }}" >> notewise-backend/.env
+          echo "AZURE_SAS_TTL_MINUTES=${{ secrets.AZURE_SAS_TTL_MINUTES }}" >> notewise-backend/.env
+          echo "ENTRA_TENANT_ID=${{ secrets.ARM_TENANT_ID }}" >> notewise-backend/.env
+          echo "ENTRA_TENANT_NAME=${{ secrets.NEXT_PUBLIC_ENTRA_TENANT_NAME }}" >> notewise-backend/.env
+          echo "API_CLIENT_ID=${{ secrets.NEXT_PUBLIC_API_CLIENT_ID }}" >> notewise-backend/.env
 
       - name: Login to Azure Container Registry
         run: az acr login --name ${{ secrets.ACR_LOGIN_SERVER }}
@@ -113,7 +113,7 @@ jobs:
       - name: Build Docker Image
         run: |
           docker build \
-            --secret id=envfile,src=envfile \
+            --secret id=envfile,src=notewise-backend/.env \
             -t ${{ secrets.ACR_LOGIN_SERVER }}/notewise-backend:latest ./notewise-backend
 
       - name: Push Docker Image to ACR
