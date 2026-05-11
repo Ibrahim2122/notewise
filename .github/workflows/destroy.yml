@@ -1,4 +1,3 @@
-# .github/workflows/destroy.yml
 name: Terraform Destroy
 
 permissions:
@@ -6,14 +5,17 @@ permissions:
   contents: read
 
 on:
-  workflow_dispatch: # manual trigger only
+  workflow_dispatch:
+    inputs:
+      lock_id:
+        description: 'Optional: Lock ID to force unlock before destroy'
+        required: false
 
 jobs:
   destroy:
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout Code
-        uses: actions/checkout@v3
+      - uses: actions/checkout@v3
 
       - name: set-variables
         shell: "pwsh"
@@ -29,10 +31,15 @@ jobs:
         with:
           terraform_version: 1.5.0
 
-      - name: Initialize Terraform
+      - name: Terraform Init
         shell: "pwsh"
         run: terraform init
 
-      - name: Destroy Terraform Resources
+      - name: Force Unlock (if needed)
+        if: ${{ inputs.lock_id != '' }}
+        shell: "pwsh"
+        run: terraform force-unlock -force ${{ inputs.lock_id }}
+
+      - name: Terraform Destroy
         shell: "pwsh"
         run: terraform destroy -auto-approve
