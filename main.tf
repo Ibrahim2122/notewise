@@ -19,7 +19,7 @@ terraform {
   }
 }
 
-# resource "azurerm_resource_group" "rg" {
-#   name     = "terraform-rg" #change here
-#   location = "eastus"
-# }
+resource "azurerm_resource_group" "notewise" {
+  name     = "notewise" #change here
+  location = "eastus"
+}
