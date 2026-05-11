@@ -49,6 +49,7 @@ resource "azurerm_postgresql_flexible_server" "notewise_server" {
   storage_mb = 32768
   backup_retention_days        = 7
   geo_redundant_backup_enabled = false
+  zone = "1"
 }
 
 resource "azurerm_postgresql_flexible_server_database" "notewise_db" {
