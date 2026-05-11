@@ -22,6 +22,11 @@ jobs:
             "ARM_USE_OIDC=true",
             "ARM_USE_AZUREAD=true") | Out-File -FilePath $env:GITHUB_ENV -Append
 
+      - name: Set up Terraform
+        uses: hashicorp/setup-terraform@v2
+        with:
+          terraform_version: 1.5.0
+
       - name: Terraform Init
         shell: "pwsh"
         run: terraform init
