@@ -93,3 +93,60 @@ resource "azurerm_subnet" "storage" {
     virtual_network_name = azurerm_virtual_network.notewise_vnet.name
     address_prefixes = ["192.168.30.0/24"]
 }
+
+resource "azurerm_resource_group" "notewise-functionapp" {
+  name     = "notewise-functionapp"
+  location = "polandcentral"
+}
+
+resource "azurerm_storage_account" "notewise-functionapp" {
+    name                = "notewisefunctionapp"
+    resource_group_name = azurerm_resource_group.notewise-functionapp.name
+    location            = azurerm_resource_group.notewise-functionapp.location
+    account_tier        = "Standard"
+    account_replication_type = "LRS"
+}
+
+resource "azurerm_log_analytics_workspace" "notewise-functionapp-law" {
+  name                = "notewise-functionapp-law"
+  location            = azurerm_resource_group.notewise-functionapp.location
+  resource_group_name = azurerm_resource_group.notewise-functionapp.name
+  sku                 = "PerGB2018"
+  retention_in_days   = 30
+}
+
+resource "azurerm_application_insights" "notewise-functionapp-ai" {
+  name                = "notewise-functionapp-ai"
+  location            = azurerm_resource_group.notewise-functionapp.location
+  resource_group_name = azurerm_resource_group.notewise-functionapp.name
+  application_type     = "web"
+  workspace_id        = azurerm_log_analytics_workspace.notewise-functionapp-law.id
+}
+
+resource "azurerm_service_plan" "notewise-functionapp-plan" {
+  name                = "notewise-functionapp-plan"
+  resource_group_name = azurerm_resource_group.notewise-functionapp.name
+  location            = azurerm_resource_group.notewise-functionapp.location
+  sku_name             = "FC1"
+  os_type              = "linux"
+}
+
+resource "azurerm_linux_function_app" "notewise-functionapp" {
+  name                = "notewise-functionapp"
+  resource_group_name = azurerm_resource_group.notewise-functionapp.name
+  location            = azurerm_resource_group.notewise-functionapp.location
+  service_plan_id     = azurerm_service_plan.notewise-functionapp-plan.id
+
+  storage_account_name       = azurerm_storage_account.notewise-functionapp.name
+  storage_account_access_key = azurerm_storage_account.notewise-functionapp.primary_access_key
+
+  site_config {
+    application_stack {
+      python_version = "3.11"
+    }
+  }
+
+  app_settings = {
+    APPLICATIONINSIGHTS_CONNECTION_STRING = azurerm_application_insights.notewise-functionapp-ai.connection_string
+  }
+}
