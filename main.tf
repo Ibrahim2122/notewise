@@ -66,3 +66,21 @@ resource "azurerm_postgresql_flexible_server_firewall_rule" "allow_azure_service
   end_ip_address      = "255.255.255.255"
 }
 
+resource "azurerm_virual_network" "notewise_vnet" {
+    name               = "notewise-vnet"
+    resource_group_name = azurerm_resource_group.notewise.name
+    location           = azurerm_resource_group.notewise.location
+    address_space     = ["192.168.0.0/16"]
+    subnet {
+        name           = "integration-subnet"
+        address_prefix = "192.168.10.0/24"
+    }
+    subnet {
+        name           = "aks-subnet"
+        address_prefix = "192.168.20.0/24"
+    }
+    subnet {
+        name           = "storage-subnet"
+        address_prefix = "192.168.30.0/24"
+    }
+}

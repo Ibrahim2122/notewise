@@ -96,9 +96,6 @@ jobs:
           tenant-id: ${{ secrets.ARM_TENANT_ID }}
           subscription-id: ${{ secrets.ARM_SUBSCRIPTION_ID }}
 
-      - name: Debug folder structure
-        run: ls -R
-
       - name: Create .env from GitHub Secretes
         run: |
           echo "DATABASE_URL=${{ secrets.DATABASE_URL }}" >> notewise-backend-v2/.env
