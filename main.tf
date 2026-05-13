@@ -34,7 +34,7 @@ resource "azurerm_storage_account" "notewise" {
 
 resource "azurerm_storage_container" "notewise" {
   name                  = "notewise-dev"
-  storage_account_name  = azurerm_storage_account.notewise.name
+  storage_account_id = azurerm_storage_account.notewise.id
   container_access_type = "private"
 }
 
@@ -107,6 +107,12 @@ resource "azurerm_storage_account" "notewise-functionapp" {
     account_replication_type = "LRS"
 }
 
+resource "azurerm_storage_container" "notewise-functionapp-container" {
+  name                  = "notewise-functionapp"
+  storage_account_id = azurerm_storage_account.notewise-functionapp.id
+  container_access_type = "private"
+}
+
 resource "azurerm_log_analytics_workspace" "notewise-functionapp-law" {
   name                = "notewise-functionapp-law"
   location            = azurerm_resource_group.notewise-functionapp.location
@@ -142,7 +148,7 @@ resource "azurerm_function_app_flex_consumption" "notewise-functionapp" {
   storage_authentication_type = "StorageAccountConnectionString"
   storage_access_key = azurerm_storage_account.notewise-functionapp.primary_access_key
   runtime_name = "python"
-  runtime_version = "~3"
+  runtime_version = "3.13"
   maximum_instance_count = 5
   instance_memory_in_mb = 2048
 
