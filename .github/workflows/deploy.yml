@@ -10,9 +10,9 @@ on:
       - main
 
 env:
-  AZURE_FUNCTIONAPP_NAME: "notewise-functionapp" # set this to your function app name on Azure
-  AZURE_FUNCTIONAPP_PACKAGE_PATH: "./notewise-functions" # set this to the path to your function app project, defaults to the repository root
-  PYTHON_VERSION: "3.13" # set this to the python version to use (e.g. '3.6', '3.7', '3.8')
+  AZURE_FUNCTIONAPP_NAME: "notewise-functionapp"
+  AZURE_FUNCTIONAPP_PACKAGE_PATH: "./notewise-functions"
+  PYTHON_VERSION: "3.13"
 
 jobs:
   deploy-infra:
@@ -154,8 +154,8 @@ jobs:
 
       - name: Zip package
         run: |
-          pushd './${{ env.AZURE_FUNCTIONAPP_PACKAGE_PATH }}'
-          zip -r ../../functionapp.zip .
+          pushd '${{ env.AZURE_FUNCTIONAPP_PACKAGE_PATH }}'
+          zip -r $GITHUB_WORKSPACE/functionapp.zip .
           popd
 
       - name: Deploy via Azure CLI
@@ -164,5 +164,5 @@ jobs:
           inlineScript: |
             az functionapp deployment source config-zip \
               --resource-group notewise-functionapp \
-              --name notewise-functionapp \
-              --src functionapp.zip
+              --name ${{ env.AZURE_FUNCTIONAPP_NAME }} \
+              --src $GITHUB_WORKSPACE/functionapp.zip
