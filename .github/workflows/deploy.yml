@@ -128,6 +128,8 @@ jobs:
   functionapp-build-and-deploy:
     name: Build and Deploy Azure Function App
     runs-on: ubuntu-latest
+    needs: deploy-infra
+    environment: dev
     steps:
       - name: "Checkout GitHub Action"
         uses: actions/checkout@v3
@@ -145,24 +147,12 @@ jobs:
           pip install -r requirements.txt --target=".python_packages/lib/site-packages"
           popd
 
-      - name: "Azure Login"
-        uses: azure/login@v1
+      - name: "Run Azure Functions Action"
+        uses: Azure/functions-action@v1
+        id: fa
         with:
-          client-id: ${{ secrets.ARM_CLIENT_ID }}
-          tenant-id: ${{ secrets.ARM_TENANT_ID }}
-          subscription-id: ${{ secrets.ARM_SUBSCRIPTION_ID }}
-
-      - name: Zip package
-        run: |
-          pushd '${{ env.AZURE_FUNCTIONAPP_PACKAGE_PATH }}'
-          zip -r $GITHUB_WORKSPACE/functionapp.zip .
-          popd
-
-      - name: Deploy via Azure CLI
-        uses: azure/CLI@v1
-        with:
-          inlineScript: |
-            az functionapp deployment source config-zip \
-              --resource-group notewise-functionapp \
-              --name ${{ env.AZURE_FUNCTIONAPP_NAME }} \
-              --src $GITHUB_WORKSPACE/functionapp.zip
+          app-name: ${{ env.AZURE_FUNCTIONAPP_NAME }}
+          package: ${{ env.AZURE_FUNCTIONAPP_PACKAGE_PATH }}
+          publish-profile: ${{ secrets.AZURE_FUNCTIONAPP_PUBLISH_PROFILE}}
+          scm-do-build-during-deployment: true
+          enable-oryx-build: true
