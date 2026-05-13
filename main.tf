@@ -133,26 +133,26 @@ resource "azurerm_service_plan" "notewise-functionapp-plan" {
   name                = "notewise-functionapp-plan"
   resource_group_name = azurerm_resource_group.notewise-functionapp.name
   location            = azurerm_resource_group.notewise-functionapp.location
-  sku_name             = "Y1"
-  os_type              = "Windows"
+  sku_name            = "Y1"
+  os_type             = "Linux"
 }
 
-resource "azurerm_function_app_flex_consumption" "notewise-functionapp" {
+resource "azurerm_linux_function_app" "notewise-functionapp" {
   name                = "notewise-functionapp"
   resource_group_name = azurerm_resource_group.notewise-functionapp.name
   location            = azurerm_resource_group.notewise-functionapp.location
   service_plan_id     = azurerm_service_plan.notewise-functionapp-plan.id
 
-  storage_container_type = "blobContainer"
-  storage_container_endpoint = azurerm_storage_account.notewise-functionapp.primary_blob_endpoint
-  storage_authentication_type = "StorageAccountConnectionString"
-  storage_access_key = azurerm_storage_account.notewise-functionapp.primary_access_key
-  runtime_name = "python"
-  runtime_version = "3.13"
-  maximum_instance_count = 5
-  instance_memory_in_mb = 2048
+  storage_account_name       = azurerm_storage_account.notewise-functionapp.name
+  storage_account_access_key = azurerm_storage_account.notewise-functionapp.primary_access_key
 
   site_config {
-    application_insights_connection_string = azurerm_application_insights.notewise-functionapp-ai.connection_string
+    application_stack {
+      python_version = "3.11"
+    }
+  }
+
+  app_settings = {
+    APPLICATIONINSIGHTS_CONNECTION_STRING = azurerm_application_insights.notewise-functionapp-ai.connection_string
   }
 }
