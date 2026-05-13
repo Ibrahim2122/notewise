@@ -128,7 +128,6 @@ jobs:
   functionapp-build-and-deploy:
     name: Build and Deploy Azure Function App
     runs-on: ubuntu-latest
-    environment: dev
     steps:
       - name: "Checkout GitHub Action"
         uses: actions/checkout@v3
