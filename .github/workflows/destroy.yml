@@ -35,10 +35,10 @@ jobs:
         shell: "pwsh"
         run: terraform init
 
-      # - name: Force Unlock (if needed)
-      #   if: ${{ inputs.lock_id != '' }}
-      #   shell: "pwsh"
-      #   run: terraform force-unlock -force ${{ inputs.lock_id }}
+      - name: Force Unlock (if needed)
+        if: ${{ inputs.lock_id != '' }}
+        shell: "pwsh"
+        run: terraform force-unlock -force ${{ inputs.lock_id }}
 
       - name: Terraform Destroy
         shell: pwsh
