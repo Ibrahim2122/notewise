@@ -41,7 +41,7 @@ jobs:
       #   run: terraform force-unlock -force ${{ inputs.lock_id }}
 
       - name: Terraform Destroy
-        shell: "pwsh"
+        shell: pwsh
         run: |
-          terraform destroy -target=azurerm_linux_function_app.notewise-functionapp -auto-approve
-          terraform destroy -target=azurerm_service_plan.notewise-functionapp-plan -auto-approve
+          terraform destroy "-target=azurerm_linux_function_app.notewise-functionapp" -auto-approve
+          terraform destroy "-target=azurerm_service_plan.notewise-functionapp-plan" -auto-approve
