@@ -8,7 +8,7 @@ on:
   workflow_dispatch:
     inputs:
       lock_id:
-        description: 'Optional: Lock ID to force unlock before destroy'
+        description: "Optional: Lock ID to force unlock before destroy"
         required: false
 
 jobs:
@@ -42,4 +42,5 @@ jobs:
 
       - name: Terraform Destroy
         shell: "pwsh"
-        run: terraform destroy -auto-approve
+        run: terraform destroy -target=azurerm_function_app.notewise-functionapp
+          terraform destroy -target=azurerm_service_plan.notewise-functionapp-plan
