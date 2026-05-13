@@ -134,7 +134,7 @@ resource "azurerm_service_plan" "notewise-functionapp-plan" {
   resource_group_name = azurerm_resource_group.notewise-functionapp.name
   location            = azurerm_resource_group.notewise-functionapp.location
   sku_name             = "Y1"
-  os_type              = "Linux"
+  os_type              = "Windows"
 }
 
 resource "azurerm_function_app_flex_consumption" "notewise-functionapp" {
