@@ -9,6 +9,11 @@ on:
     branches:
       - main
 
+env:
+  AZURE_FUNCTIONAPP_NAME: "notewise-functionapp" # set this to your function app name on Azure
+  AZURE_FUNCTIONAPP_PACKAGE_PATH: "./notewise-functions" # set this to the path to your function app project, defaults to the repository root
+  PYTHON_VERSION: "3.13" # set this to the python version to use (e.g. '3.6', '3.7', '3.8')
+
 jobs:
   deploy-infra:
     name: Deploy Infrastructure
@@ -119,3 +124,34 @@ jobs:
       - name: Push Docker Image to ACR
         run: |
           docker push ${{ secrets.ACR_LOGIN_SERVER }}/notewise-backend:latest
+
+  functionapp-build-and-deploy:
+    name: Build and Deploy Azure Function App
+    runs-on: ubuntu-latest
+    environment: dev
+    steps:
+      - name: "Checkout GitHub Action"
+        uses: actions/checkout@v3
+
+      - name: Setup Python ${{ env.PYTHON_VERSION }} Environment
+        uses: actions/setup-python@v4
+        with:
+          python-version: ${{ env.PYTHON_VERSION }}
+
+      - name: "Resolve Project Dependencies using pip"
+        shell: bash
+        run: |
+          pushd './${{ env.AZURE_FUNCTIONAPP_PACKAGE_PATH }}'
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt --target=".python_packages/lib/site-packages"
+          popd
+
+      - name: "Run Azure Functions Action"
+        uses: Azure/functions-action@v1
+        id: fa
+        with:
+          app-name: ${{ env.AZURE_FUNCTIONAPP_NAME }}
+          package: ${{ env.AZURE_FUNCTIONAPP_PACKAGE_PATH }}
+          publish-profile: ${{ secrets.AZURE_FUNCTIONAPP_PUBLISH_PROFILE}}
+          scm-do-build-during-deployment: true
+          enable-oryx-build: true
