@@ -43,5 +43,4 @@ jobs:
       - name: Terraform Destroy
         shell: pwsh
         run: |
-          terraform destroy "-target=azurerm_linux_function_app.notewise-functionapp" -auto-approve
-          terraform destroy "-target=azurerm_service_plan.notewise-functionapp-plan" -auto-approve
+          terraform destroy "-target=azurerm_resource_group.notewise-functionapp" -auto-approve
