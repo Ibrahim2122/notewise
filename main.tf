@@ -96,7 +96,7 @@ resource "azurerm_subnet" "storage" {
 
 resource "azurerm_resource_group" "notewise-functionapp" {
   name     = "notewise-functionapp"
-  location = "polandcentral"
+  location = "northeurope"
 }
 
 resource "azurerm_storage_account" "notewise-functionapp" {
@@ -134,7 +134,7 @@ resource "azurerm_service_plan" "notewise-functionapp-plan" {
   resource_group_name = azurerm_resource_group.notewise-functionapp.name
   location            = azurerm_resource_group.notewise-functionapp.location
   sku_name            = "Y1"
-  os_type             = "Windows"
+  os_type             = "Linux"
 }
 
 resource "azurerm_linux_function_app" "notewise-functionapp" {
@@ -148,7 +148,7 @@ resource "azurerm_linux_function_app" "notewise-functionapp" {
 
   site_config {
     application_stack {
-      python_version = "3.11"
+      python_version = "3.13"
     }
   }
 
