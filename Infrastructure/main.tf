@@ -154,6 +154,6 @@ resource "azurerm_linux_function_app" "notewise-functionapp" {
 
   app_settings = {
     APPLICATIONINSIGHTS_CONNECTION_STRING = azurerm_application_insights.notewise-functionapp-ai.connection_string
-    # WEBSITE_RUN_FROM_PACKAGE = "1"
+    WEBSITE_RUN_FROM_PACKAGE = "1"
   }
 }
