@@ -9,7 +9,7 @@ on:
     branches:
       - main
     paths:
-      - "infrastructure/**"
+      - "Infrastructure/**"
 
   workflow_dispatch:
 
