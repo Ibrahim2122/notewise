@@ -156,7 +156,9 @@ resource "azurerm_function_app" "notewise" {
   app_settings = {
     "FUNCTIONS_WORKER_RUNTIME" = "python",
     "AzureWebJobsDisableHomepage" = "true",
-    "SCM_DO_BUILD_DURING_DEPLOYMENT" = "true"
+    "SCM_DO_BUILD_DURING_DEPLOYMENT" = "true",
+    "APPINSIGHTS_INSTRUMENTATIONKEY" = azurerm_application_insights.notewise-functionapp-ai.instrumentation_key,
+    "APPLICATIONINSIGHTS_CONNECTION_STRING" = azurerm_application_insights.notewise-functionapp
   }
 
   site_config {
