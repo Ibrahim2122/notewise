@@ -17,6 +17,9 @@ jobs:
   deploy-infra:
     name: Deploy Infrastructure
     runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: Infrastructure
     steps:
       - name: Checkout Code
         uses: actions/checkout@v3
