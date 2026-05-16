@@ -141,8 +141,8 @@ resource "azurerm_app_service_plan" "notewise-functionapp-plan" {
   }
 }
 
-resource "azurerm_function_app" "notewise-functionapp" {
-  name                = "notewise-functionapp"
+resource "azurerm_function_app" "notewise" {
+  name                = "notewise"
   resource_group_name = azurerm_resource_group.notewise-functionapp.name
   location            = azurerm_resource_group.notewise-functionapp.location
   app_service_plan_id = azurerm_app_service_plan.notewise-functionapp-plan.id
