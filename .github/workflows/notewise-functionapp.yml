@@ -86,6 +86,6 @@ jobs:
         uses: Azure/functions-action@v1
         id: deploy-to-function
         with:
-          app-name: "notewise-functionapp"
+          app-name: "notewise"
           slot-name: "Production"
           package: release.zip
