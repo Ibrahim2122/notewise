@@ -2,7 +2,7 @@ terraform {
   required_providers {
     azurerm = {
       source  = "hashicorp/azurerm"
-      version = "~> 4.14"
+      version = "~> 4.21"
     }
   }
 }
@@ -137,23 +137,23 @@ resource "azurerm_service_plan" "notewise-functionapp-plan" {
   os_type             = "Linux"
 }
 
-resource "azurerm_linux_function_app" "notewise" {
+resource "azurerm_function_app_flex_consumption" "notewise" {
   name                = "notewise"
   resource_group_name = azurerm_resource_group.notewise-functionapp.name
   location            = azurerm_resource_group.notewise-functionapp.location
   service_plan_id     = azurerm_service_plan.notewise-functionapp-plan.id
 
-  storage_account_name       = azurerm_storage_account.notewise-functionapp.name
-  storage_account_access_key = azurerm_storage_account.notewise-functionapp.primary_access_key
+  storage_container_type = "blobContainer"
+  storage_container_endpoint = "${azurerm_storage_account.notewise-functionapp.primary_blob_endpoint}${azurerm_storage_container.notewise-functionapp-container.name}"
+  storage_authentication_type = "StorageAccountConnectionString"
+  storage_access_key  = azurerm_storage_account.notewise-functionapp.primary_access_key
 
-  site_config {
-    application_stack {
-      python_version = "3.13"
-    }
-  }
+  runtime_name    = "python"
+  runtime_version = "3.13"
+
+  site_config {}
 
   app_settings = {
-    "FUNCTIONS_WORKER_RUNTIME"       = "python"
     "AzureWebJobsDisableHomepage"    = "true"
     "SCM_DO_BUILD_DURING_DEPLOYMENT" = "true"
     "APPINSIGHTS_INSTRUMENTATIONKEY" = azurerm_application_insights.notewise-functionapp-ai.instrumentation_key
