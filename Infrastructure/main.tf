@@ -134,6 +134,7 @@ resource "azurerm_app_service_plan" "notewise-functionapp-plan" {
   resource_group_name = azurerm_resource_group.notewise-functionapp.name
   location            = azurerm_resource_group.notewise-functionapp.location
   kind                = "Linux"
+  reserved            = true
   
   sku {
     tier = "FlexConsumption"
