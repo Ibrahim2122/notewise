@@ -129,43 +129,33 @@ resource "azurerm_application_insights" "notewise-functionapp-ai" {
   workspace_id        = azurerm_log_analytics_workspace.notewise-functionapp-law.id
 }
 
-resource "azurerm_app_service_plan" "notewise-functionapp-plan" {
+resource "azurerm_service_plan" "notewise-functionapp-plan" {
   name                = "notewise-functionapp-plan"
   resource_group_name = azurerm_resource_group.notewise-functionapp.name
   location            = azurerm_resource_group.notewise-functionapp.location
-  kind                = "Linux"
-  reserved            = true
-  
-  sku {
-    tier = "FlexConsumption"
-    size = "FC1"
-  }
+  sku_name            = "FC1"
+  os_type             = "Linux"
 }
 
-resource "azurerm_function_app" "notewise" {
+resource "azurerm_linux_function_app" "notewise" {
   name                = "notewise"
   resource_group_name = azurerm_resource_group.notewise-functionapp.name
   location            = azurerm_resource_group.notewise-functionapp.location
-  app_service_plan_id = azurerm_app_service_plan.notewise-functionapp-plan.id
+  service_plan_id     = azurerm_service_plan.notewise-functionapp-plan.id
 
   storage_account_name       = azurerm_storage_account.notewise-functionapp.name
   storage_account_access_key = azurerm_storage_account.notewise-functionapp.primary_access_key
-  os_type                    = "linux"
-  version                    = "~4"
-
-  app_settings = {
-    "FUNCTIONS_WORKER_RUNTIME" = "python",
-    "AzureWebJobsDisableHomepage" = "true",
-    "SCM_DO_BUILD_DURING_DEPLOYMENT" = "true",
-    "APPINSIGHTS_INSTRUMENTATIONKEY" = azurerm_application_insights.notewise-functionapp-ai.instrumentation_key,
-  }
 
   site_config {
-    linux_fx_version = "PYTHON|3.13"
+    application_stack {
+      python_version = "3.13"
+    }
   }
 
-  source_control {
-    repo_url = "https://github.com/Ibrahim2122/notewise"
-    branch   = "main"
+  app_settings = {
+    "FUNCTIONS_WORKER_RUNTIME"       = "python"
+    "AzureWebJobsDisableHomepage"    = "true"
+    "SCM_DO_BUILD_DURING_DEPLOYMENT" = "true"
+    "APPINSIGHTS_INSTRUMENTATIONKEY" = azurerm_application_insights.notewise-functionapp-ai.instrumentation_key
   }
 }
