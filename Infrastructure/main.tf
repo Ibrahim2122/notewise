@@ -146,7 +146,7 @@ resource "azurerm_function_app" "notewise-functionapp" {
   resource_group_name = azurerm_resource_group.notewise-functionapp.name
   location            = azurerm_resource_group.notewise-functionapp.location
   app_service_plan_id = azurerm_app_service_plan.notewise-functionapp-plan.id
-  
+
   storage_account_name       = azurerm_storage_account.notewise-functionapp.name
   storage_account_access_key = azurerm_storage_account.notewise-functionapp.primary_access_key
   os_type                    = "linux"
@@ -165,4 +165,5 @@ resource "azurerm_function_app" "notewise-functionapp" {
   source_control {
     repo_url = "https://github.com/Ibrahim2122/notewise"
     branch   = "main"
+  }
 }
