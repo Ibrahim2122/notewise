@@ -129,31 +129,40 @@ resource "azurerm_application_insights" "notewise-functionapp-ai" {
   workspace_id        = azurerm_log_analytics_workspace.notewise-functionapp-law.id
 }
 
-resource "azurerm_service_plan" "notewise-functionapp-plan" {
+resource "azurerm_app_service_plan" "notewise-functionapp-plan" {
   name                = "notewise-functionapp-plan"
   resource_group_name = azurerm_resource_group.notewise-functionapp.name
   location            = azurerm_resource_group.notewise-functionapp.location
-  sku_name            = "Y1"
-  os_type             = "Linux"
+  kind                = "Linux"
+  
+  sku {
+    tier = "FlexConsumption"
+    size = "FC1"
+  }
 }
 
-resource "azurerm_linux_function_app" "notewise-functionapp" {
+resource "azurerm_function_app" "notewise-functionapp" {
   name                = "notewise-functionapp"
   resource_group_name = azurerm_resource_group.notewise-functionapp.name
   location            = azurerm_resource_group.notewise-functionapp.location
-  service_plan_id     = azurerm_service_plan.notewise-functionapp-plan.id
-
+  app_service_plan_id = azurerm_app_service_plan.notewise-functionapp-plan.id
+  
   storage_account_name       = azurerm_storage_account.notewise-functionapp.name
   storage_account_access_key = azurerm_storage_account.notewise-functionapp.primary_access_key
-
-  site_config {
-    application_stack {
-      python_version = "3.13"
-    }
-  }
+  os_type                    = "linux"
+  version                    = "~4"
 
   app_settings = {
-    APPLICATIONINSIGHTS_CONNECTION_STRING = azurerm_application_insights.notewise-functionapp-ai.connection_string
-    WEBSITE_RUN_FROM_PACKAGE = "1"
+    "FUNCTIONS_WORKER_RUNTIME" = "python",
+    "AzureWebJobsDisableHomepage" = "true",
+    "SCM_DO_BUILD_DURING_DEPLOYMENT" = "true"
   }
+
+  site_config {
+    linux_fx_version = "PYTHON|3.13"
+  }
+
+  source_control {
+    repo_url = "https://github.com/Ibrahim2122/notewise"
+    branch   = "main"
 }
