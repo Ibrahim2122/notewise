@@ -1,0 +1,48 @@
+name: Deploy Infrastructure Pipeline
+
+permissions:
+  id-token: write
+  contents: read
+
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - "infrastructure/**"
+
+  workflow_dispatch:
+
+jobs:
+  deploy-infra:
+    name: Deploy Infrastructure
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v3
+
+      - name: set-variables
+        shell: "pwsh"
+        run: |
+          @("ARM_CLIENT_ID=${{ secrets.ARM_CLIENT_ID }}",
+            "ARM_SUBSCRIPTION_ID=${{ secrets.ARM_SUBSCRIPTION_ID }}",
+            "ARM_TENANT_ID=${{ secrets.ARM_TENANT_ID }}",
+            "ARM_USE_OIDC=true",
+            "ARM_USE_AZUREAD=true") | Out-File -FilePath $env:GITHUB_ENV -Append
+
+      - name: Set up Terraform
+        uses: hashicorp/setup-terraform@v2
+        with:
+          terraform_version: 1.5.0
+
+      - name: Initialize Terraform
+        shell: "pwsh"
+        run: terraform init
+
+      - name: Plan Terraform Changes
+        shell: "pwsh"
+        run: terraform plan
+
+      - name: Apply Terraform Changes
+        shell: "pwsh"
+        run: terraform apply -auto-approve
