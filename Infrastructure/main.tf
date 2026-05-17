@@ -155,7 +155,6 @@ resource "azurerm_function_app_flex_consumption" "notewise" {
 
   app_settings = {
     "AzureWebJobsDisableHomepage"    = "true"
-    "SCM_DO_BUILD_DURING_DEPLOYMENT" = "true"
     "APPINSIGHTS_INSTRUMENTATIONKEY" = azurerm_application_insights.notewise-functionapp-ai.instrumentation_key
   }
 }
