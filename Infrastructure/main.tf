@@ -156,5 +156,6 @@ resource "azurerm_function_app_flex_consumption" "notewise" {
   app_settings = {
     "AzureWebJobsDisableHomepage"    = "true"
     "APPINSIGHTS_INSTRUMENTATIONKEY" = azurerm_application_insights.notewise-functionapp-ai.instrumentation_key
+    "DATABASE_URL" = "postgresql+psycopg2://notewise:Password1234@notewise-server.postgres.database.azure.com:5432/notewise-db?sslmode=require"
   }
 }
