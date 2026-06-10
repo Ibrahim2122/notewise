@@ -12,8 +12,8 @@ provider "azurerm" {
 
 terraform {
   backend "azurerm" {
-    resource_group_name  = "terraform-rg" #change here
-    storage_account_name = "tfstatefilesecret" #change here
+    resource_group_name  = "notewise-pipeline" #change here
+    storage_account_name = "tfstatefilesecret001" #change here
     container_name       = "tfstate"
     key                  = "terraform.tfstate"
   }
