@@ -25,7 +25,7 @@ resource "azurerm_resource_group" "notewise" {
 }
 
 resource "azurerm_storage_account" "notewise" {
-    name                = "notewise"
+    name                = "notewise001"
     resource_group_name = azurerm_resource_group.notewise.name
     location            = azurerm_resource_group.notewise.location
     account_tier        = "Standard"
@@ -39,7 +39,7 @@ resource "azurerm_storage_container" "notewise" {
 }
 
 resource "azurerm_postgresql_flexible_server" "notewise_server" {
-  name                = "notewise-server"
+  name                = "notewise-server001"
   location            = azurerm_resource_group.notewise.location
   resource_group_name = azurerm_resource_group.notewise.name
   version             = "16"
@@ -100,7 +100,7 @@ resource "azurerm_resource_group" "notewise-functionapp" {
 }
 
 resource "azurerm_storage_account" "notewise-functionapp" {
-    name                = "notewisefunctionapp"
+    name                = "notewisefunctionapp001"
     resource_group_name = azurerm_resource_group.notewise-functionapp.name
     location            = azurerm_resource_group.notewise-functionapp.location
     account_tier        = "Standard"
@@ -138,7 +138,7 @@ resource "azurerm_service_plan" "notewise-functionapp-plan" {
 }
 
 resource "azurerm_function_app_flex_consumption" "notewise" {
-  name                = "notewise"
+  name                = "notewise001"
   resource_group_name = azurerm_resource_group.notewise-functionapp.name
   location            = azurerm_resource_group.notewise-functionapp.location
   service_plan_id     = azurerm_service_plan.notewise-functionapp-plan.id
