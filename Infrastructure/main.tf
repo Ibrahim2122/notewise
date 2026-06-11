@@ -162,7 +162,7 @@ resource "azurerm_function_app_flex_consumption" "notewise" {
   storage_authentication_type = "SystemAssignedIdentity"
   # storage_access_key  = azurerm_storage_account.notewise-functionapp.primary_access_key
 
-  identity {type = "SystemAssignd"}
+  identity { type = "SystemAssigned" }
 
   runtime_name    = "python"
   runtime_version = "3.13"
