@@ -8,6 +8,7 @@ terraform {
 }
 provider "azurerm" {
   features {}
+  storage_use_azuread = true
 }
 
 terraform {
@@ -137,6 +138,19 @@ resource "azurerm_service_plan" "notewise-functionapp-plan" {
   os_type             = "Linux"
 }
 
+resource "azurerm_role_assignment" "func_storage" {
+  scope = azurerm_storage_account.notewise-functionapp.id
+  role_definition_name = "Storage Blob Data Contributor"
+  principal_id = azurerm_function_app_flex_consumption.notewise.identity[0]
+  
+}
+
+resource "azurerm_role_assignment" "func_uploads_storage" {
+  scope                = azurerm_storage_account.notewise.id
+  role_definition_name = "Storage Blob Data Contributor"
+  principal_id         = azurerm_function_app_flex_consumption.notewise.identity[0].principal_id
+}
+
 resource "azurerm_function_app_flex_consumption" "notewise" {
   name                = "notewise001"
   resource_group_name = azurerm_resource_group.notewise-functionapp.name
@@ -145,8 +159,10 @@ resource "azurerm_function_app_flex_consumption" "notewise" {
 
   storage_container_type = "blobContainer"
   storage_container_endpoint = "${azurerm_storage_account.notewise-functionapp.primary_blob_endpoint}${azurerm_storage_container.notewise-functionapp-container.name}"
-  storage_authentication_type = "StorageAccountConnectionString"
-  storage_access_key  = azurerm_storage_account.notewise-functionapp.primary_access_key
+  storage_authentication_type = "SystemAssignedIdentity"
+  # storage_access_key  = azurerm_storage_account.notewise-functionapp.primary_access_key
+
+  identity {type = "SystemAssignd"}
 
   runtime_name    = "python"
   runtime_version = "3.13"
@@ -159,3 +175,5 @@ resource "azurerm_function_app_flex_consumption" "notewise" {
     "DATABASE_URL" = "postgresql+psycopg2://notewise:Password1234@notewise-server.postgres.database.azure.com:5432/notewise-db?sslmode=require"
   }
 }
+
+
