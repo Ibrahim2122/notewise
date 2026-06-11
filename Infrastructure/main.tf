@@ -141,7 +141,7 @@ resource "azurerm_service_plan" "notewise-functionapp-plan" {
 resource "azurerm_role_assignment" "func_storage" {
   scope = azurerm_storage_account.notewise-functionapp.id
   role_definition_name = "Storage Blob Data Contributor"
-  principal_id = azurerm_function_app_flex_consumption.notewise.identity[0]
+  principal_id = azurerm_function_app_flex_consumption.notewise.identity[0].principal_id
   
 }
 
