@@ -44,3 +44,4 @@ jobs:
         shell: pwsh
         run: |
           terraform destroy -target=azurerm_virtual_network.notewise_vnet -auto-approve
+
