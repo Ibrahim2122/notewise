@@ -35,7 +35,7 @@ resource "azurerm_storage_account" "notewise-sg" {
 
 resource "azurerm_storage_container" "notewise-sg-container" {
   name                  = "notewise-dev"
-  storage_account_id = azurerm_storage_account.notewise.id
+  storage_account_id = azurerm_storage_account.notewise-sg
   container_access_type = "private"
 }
 
