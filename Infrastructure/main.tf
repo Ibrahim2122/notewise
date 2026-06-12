@@ -71,28 +71,28 @@ resource "azurerm_virtual_network" "notewise_vnet" {
     name               = "notewise-vnet"
     resource_group_name = azurerm_resource_group.notewise.name
     location           = azurerm_resource_group.notewise.location
-    address_space     = ["192.168.0.0/16"]
+    address_space     = ["10.1.0.0/16"]
 }
 
 resource "azurerm_subnet" "integration" {
     name = "integration_subnet"
     resource_group_name = azurerm_resource_group.notewise.name
     virtual_network_name = azurerm_virtual_network.notewise_vnet.name
-    address_prefixes = ["192.168.10.0/24"]
+    address_prefixes = ["10.1.10.0/24"]
 }
 
 resource "azurerm_subnet" "aks" {
     name = "aks_subnet"
     resource_group_name = azurerm_resource_group.notewise.name
     virtual_network_name = azurerm_virtual_network.notewise_vnet.name
-    address_prefixes = ["192.168.20.0/24"]
+    address_prefixes = ["10.1.20.0/24"]
 }
 
 resource "azurerm_subnet" "storage" {
     name = "storage_subnet"
     resource_group_name = azurerm_resource_group.notewise.name
     virtual_network_name = azurerm_virtual_network.notewise_vnet.name
-    address_prefixes = ["192.168.30.0/24"]
+    address_prefixes = ["10.1.30.0/24"]
 }
 
 resource "azurerm_resource_group" "notewise-functionapp" {
@@ -177,3 +177,16 @@ resource "azurerm_function_app_flex_consumption" "notewise" {
 }
 
 
+resource "azurerm_virtual_network" "function-vnet" {
+  name = "function-vnet"
+  resource_group_name = azurerm_function_app_flex_consumption.notewise.resource_group_name
+  location = azurerm_function_app_flex_consumption.notewise.location
+  address_space = ["10.2.0.0/16"]
+}
+
+resource "azurerm_subnet" "func_subnet" {
+    name = "func_sub"
+    resource_group_name = azurerm_function_app_flex_consumption.notewise.resource_group_name
+    virtual_network_name = azurerm_virtual_network.function-vnet.name
+    address_prefixes = ["10.2.10/24"]
+}
