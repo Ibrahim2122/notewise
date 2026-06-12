@@ -188,7 +188,7 @@ resource "azurerm_subnet" "func_subnet" {
     name = "func_sub"
     resource_group_name = azurerm_function_app_flex_consumption.notewise.resource_group_name
     virtual_network_name = azurerm_virtual_network.function-vnet.name
-    address_prefixes = ["10.2.10/24"]
+    address_prefixes = ["10.2.10.0/24"]
 }
 
 resource "azurerm_linux_virtual_machine" "runner" {
