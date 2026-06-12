@@ -265,3 +265,27 @@ resource "azurerm_network_interface" "runner" {
     private_ip_address_allocation = "Dynamic"
   }
 }
+
+# Peering: vnet1 → vnet2
+resource "azurerm_virtual_network_peering" "notewise-2-function" {
+  name                      = "notewise-2-function"
+  resource_group_name       = azurerm_resource_group.notewise.name
+  virtual_network_name      = azurerm_virtual_network.notewise_vnet.name
+  remote_virtual_network_id = azurerm_virtual_network.function-vnet.id
+
+  allow_virtual_network_access = true
+  allow_forwarded_traffic      = true
+  allow_gateway_transit        = false
+}
+
+# Peering: vnet2 → vnet1
+resource "azurerm_virtual_network_peering" "function-2-notewise" {
+  name                      = "function-2-notewise"
+  resource_group_name       = azurerm_resource_group.notewise-functionapp.name
+  virtual_network_name      = azurerm_virtual_network.function-vnet.name
+  remote_virtual_network_id = azurerm_virtual_network.notewise_vnet.id
+
+  allow_virtual_network_access = true
+  allow_forwarded_traffic      = true
+  allow_gateway_transit        = false
+}

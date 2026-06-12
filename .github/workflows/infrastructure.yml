@@ -16,7 +16,7 @@ on:
 jobs:
   deploy-infra:
     name: Deploy Infrastructure
-    runs-on: ubuntu-latest
+    runs-on: [self-hosted, azure-vnet]
     defaults:
       run:
         working-directory: Infrastructure
