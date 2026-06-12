@@ -200,10 +200,9 @@ resource "azurerm_linux_virtual_machine" "runner" {
 
   network_interface_ids = [azurerm_network_interface.runner.id]
 
-  admin_ssh_key {
-    username   = "azureuser"
-    public_key = file("~/.ssh/id_rsa.pub")
-  }
+  admin_password   = "Password1234"
+
+
 
   os_disk {
     caching              = "ReadWrite"
