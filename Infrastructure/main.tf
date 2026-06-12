@@ -39,6 +39,42 @@ resource "azurerm_storage_container" "notewise-sg-container" {
   container_access_type = "private"
 }
 
+data "azurerm_storage_account" "tfstate" {
+  name                = "tfstatefilesecret001"
+  resource_group_name = "notewise-pipeline"
+}
+
+resource "azurerm_private_dns_zone" "blob" {
+  name                = "privatelink.blob.core.windows.net"
+  resource_group_name = azurerm_resource_group.notewise.name
+}
+
+resource "azurerm_private_dns_zone_virtual_network_link" "blob" {
+  name                  = "link-notewise-vnet"
+  resource_group_name   = azurerm_resource_group.notewise.name
+  private_dns_zone_name = azurerm_private_dns_zone.blob.name
+  virtual_network_id    = azurerm_virtual_network.notewise_vnet.id
+}
+
+resource "azurerm_private_endpoint" "tfstate" {
+  name                = "pe-tfstate-blob"
+  resource_group_name = azurerm_resource_group.notewise.name
+  location            = azurerm_resource_group.notewise.location
+  subnet_id           = azurerm_subnet.storage.id   # fine to reuse; a dedicated subnet is optional
+
+  private_service_connection {
+    name                           = "psc-tfstate-blob"
+    private_connection_resource_id = data.azurerm_storage_account.tfstate.id
+    subresource_names              = ["blob"]
+    is_manual_connection           = false
+  }
+
+  private_dns_zone_group {
+    name                 = "dns-blob"
+    private_dns_zone_ids = [azurerm_private_dns_zone.blob.id]
+  }
+}
+
 resource "azurerm_postgresql_flexible_server" "notewise_server" {
   name                = "notewise-server001"
   location            = azurerm_resource_group.notewise.location
