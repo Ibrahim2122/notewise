@@ -146,7 +146,7 @@ resource "azurerm_role_assignment" "func_storage" {
 }
 
 resource "azurerm_role_assignment" "func_uploads_storage" {
-  scope                = azurerm_storage_account.notewise.id
+  scope                = azurerm_storage_account.notewise-sg.id
   role_definition_name = "Storage Blob Data Contributor"
   principal_id         = azurerm_function_app_flex_consumption.notewise.identity[0].principal_id
 }
@@ -226,7 +226,7 @@ resource "azurerm_network_interface" "runner" {
 
   ip_configuration {
     name                          = "internal"
-    subnet_id                     = azurerm_subnet.runners.id
+    subnet_id                     = azurerm_subnet.storage.id
     private_ip_address_allocation = "Dynamic"
   }
 }
