@@ -128,6 +128,7 @@ resource "azurerm_application_insights" "notewise-functionapp-ai" {
   resource_group_name = azurerm_resource_group.notewise-functionapp.name
   application_type     = "web"
   workspace_id        = azurerm_log_analytics_workspace.notewise-functionapp-law.id
+  
 }
 
 resource "azurerm_service_plan" "notewise-functionapp-plan" {
