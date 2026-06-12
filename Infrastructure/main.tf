@@ -198,12 +198,11 @@ resource "azurerm_linux_virtual_machine" "runner" {
   location            = azurerm_resource_group.notewise.location
   size                = "Standard_B2s"
   admin_username      = "azureuser"
-
-  network_interface_ids = [azurerm_network_interface.runner.id]
-
   admin_password   = "Password1234"
 
+  disable_password_authentication = false
 
+  network_interface_ids = [azurerm_network_interface.runner.id]  
 
   os_disk {
     caching              = "ReadWrite"
