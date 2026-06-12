@@ -25,7 +25,7 @@ resource "azurerm_resource_group" "notewise" {
   location = "polandcentral"
 }
 
-resource "azurerm_storage_account" "notewise" {
+resource "azurerm_storage_account" "notewise-sg" {
     name                = "notewise001"
     resource_group_name = azurerm_resource_group.notewise.name
     location            = azurerm_resource_group.notewise.location
@@ -33,7 +33,7 @@ resource "azurerm_storage_account" "notewise" {
     account_replication_type = "LRS"
 }
 
-resource "azurerm_storage_container" "notewise" {
+resource "azurerm_storage_container" "notewise-sg-container" {
   name                  = "notewise-dev"
   storage_account_id = azurerm_storage_account.notewise.id
   container_access_type = "private"
@@ -189,4 +189,32 @@ resource "azurerm_subnet" "func_subnet" {
     resource_group_name = azurerm_function_app_flex_consumption.notewise.resource_group_name
     virtual_network_name = azurerm_virtual_network.function-vnet.name
     address_prefixes = ["10.2.10/24"]
+}
+
+resource "azurerm_linux_virtual_machine" "runner" {
+  name                = "gh-runner-01"
+  resource_group_name = azurerm_resource_group.notewise.name
+  location            = azurerm_resource_group.notewise.location
+  size                = "Standard_B2s"
+  admin_username      = "azureuser"
+
+  network_interface_ids = [azurerm_network_interface.runner.id]
+
+  admin_ssh_key {
+    username   = "azureuser"
+    public_key = file("~/.ssh/id_rsa.pub")
+  }
+
+  os_disk {
+    caching              = "ReadWrite"
+    storage_account_type = "Standard_LRS"
+    disk_size_gb         = 64
+  }
+
+  source_image_reference {
+    publisher = "Canonical"
+    offer     = "ubuntu-24_04-lts"
+    sku       = "server"
+    version   = "latest"
+  }
 }
