@@ -218,3 +218,15 @@ resource "azurerm_linux_virtual_machine" "runner" {
     version   = "latest"
   }
 }
+
+resource "azurerm_network_interface" "runner" {
+  name                = "runner-vm-nic"
+  resource_group_name = azurerm_resource_group.notewise.name
+  location            = azurerm_resource_group.notewise.location
+
+  ip_configuration {
+    name                          = "internal"
+    subnet_id                     = azurerm_subnet.runners.id
+    private_ip_address_allocation = "Dynamic"
+  }
+}
