@@ -12,9 +12,9 @@ Pipeline:
   8. Mark Source + Job → DONE  (or FAILED with error_message on any exception)
 
 Environment variables (local.settings.json + Azure Function App Settings):
-  DATABASE_URL                    — postgresql://user:pass@host:5432/dbname
-  AZURE_STORAGE_CONNECTION_STRING — full connection string
-  AZURE_BLOB_CONTAINER            — e.g. "notewise-dev"
+  DATABASE_URL          — postgresql://user:pass@host:5432/dbname
+  AzureWebJobsStorage   — full storage connection string (also used by the Functions runtime)
+  AZURE_BLOB_CONTAINER  — e.g. "notewise-dev"
   GEMINI_API_KEY                  — Google AI Studio key (never hardcode) - Back Agaain
   GEMENI_API_KEY                    — GEMENI API key (never hardcode) - Removed
 
@@ -161,7 +161,7 @@ def parse_blob_name(blob_name: str) -> tuple[uuid.UUID, str]:
 # ---------------------------------------------------------------------------
 
 def _download_blob_bytes(blob_name: str) -> bytes:
-    conn_str  = os.environ["AZURE_STORAGE_CONNECTION_STRING"]
+    conn_str  = os.environ["AzureWebJobsStorage"]
     container = os.environ["AZURE_BLOB_CONTAINER"]
     client    = BlobServiceClient.from_connection_string(conn_str)
     return client.get_blob_client(container=container, blob=blob_name).download_blob().readall()
@@ -378,7 +378,7 @@ CONTAINER = os.environ.get("AZURE_BLOB_CONTAINER", "notewise-dev")
 @app.blob_trigger(
     arg_name="blob",
     path=f"{CONTAINER}/{{name}}",
-    connection="AZURE_STORAGE_CONNECTION_STRING",
+    connection="AzureWebJobsStorage",
 )
 def process_blob(blob: func.InputStream) -> None:
     blob_name: str = blob.name

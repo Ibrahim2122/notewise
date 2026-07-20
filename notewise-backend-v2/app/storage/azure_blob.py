@@ -17,6 +17,7 @@ from azure.storage.blob import (
 
 from app.config import settings
 
+UPLOAD_SAS_TTL_MINUTES = 15
 
 # ---------------------------------------------------------------------------
 # Internal client factory (module-level singleton is fine for sync FastAPI)
@@ -50,7 +51,7 @@ def generate_upload_sas_url(blob_path: str) -> tuple[str, int]:
     Returns:
         (upload_url, expires_in_seconds)
     """
-    ttl_minutes = settings.AZURE_SAS_TTL_MINUTES
+    ttl_minutes = UPLOAD_SAS_TTL_MINUTES
     expiry = datetime.now(timezone.utc) + timedelta(minutes=ttl_minutes)
 
     sas_token = generate_blob_sas(
