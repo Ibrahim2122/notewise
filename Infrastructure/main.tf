@@ -213,7 +213,6 @@ resource "azurerm_function_app_flex_consumption" "notewise" {
   }
 }
 
-
 resource "azurerm_virtual_network" "function-vnet" {
   name = "function-vnet"
   resource_group_name = azurerm_function_app_flex_consumption.notewise.resource_group_name
