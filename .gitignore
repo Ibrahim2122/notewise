@@ -10,7 +10,6 @@
 __pycache__/
 *.pyc
 *.pyo
-.env
 venv/
 *.egg-info/
 
@@ -18,8 +17,6 @@ venv/
 node_modules/
 .next/
 dist/
-.env.local
-.env*.local
 
 # Misc
 *.zip
@@ -27,3 +24,9 @@ uploads/
 
 #vscode workspace
 *.code-workspace
+
+# env files — real values never committed, only *.example templates
+.env
+.env.*
+!.env.example
+local.settings.json

@@ -1,0 +1,14 @@
+{
+  "IsEncrypted": false,
+  "Values": {
+    "AzureWebJobsSecretStorageType": "Files",
+    "AzureWebJobsStorage": "<your-storage-connection-string>",
+    "DATABASE_URL": "postgresql+psycopg2://<user>:<password>@<host>:5432/<database>",
+    "FUNCTIONS_WORKER_RUNTIME": "python",
+    "AZURE_BLOB_CONTAINER": "notewise-dev",
+    "OPENROUTER_API_KEY": "<openrouter-api-key>",
+    "GEMINI_API_KEY": "<gemini-api-key>",
+    "OPENROUTER_HTTP_REFERER": "https://example.com",
+    "OPENROUTER_APP_TITLE": "notewise-functions"
+  }
+}

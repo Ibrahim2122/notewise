@@ -164,7 +164,8 @@ source .venv/bin/activate         # Windows: .venv\Scripts\activate
 pip install -r requirements.txt
 
 # Copy and fill in environment variables
-cp .env.example .env
+# ENVIRONMENT (defaults to "development") picks which file is loaded
+cp .env.example .env.development
 
 # Run migrations
 alembic upgrade head
@@ -180,7 +181,8 @@ cd frontend
 npm install
 
 # Copy and fill in environment variables
-cp .env.example .env.local
+# next dev loads .env.development automatically
+cp .env.example .env.development
 
 # Start the dev server
 npm run dev
@@ -195,7 +197,8 @@ npm install -g azure-functions-core-tools@4
 cd function
 pip install -r requirements.txt
 
-# Configure local.settings.json with your connection strings
+# Copy and fill in local settings (Azure Functions has no .env — this is its equivalent)
+cp local.settings.json.example local.settings.json
 func start
 ```
 
@@ -203,20 +206,38 @@ func start
 
 ## Environment Variables
 
-### Backend (`.env`)
+Each service keeps real secrets in a gitignored file and a checked-in
+`*.example` template documents the required keys. Which real file is loaded
+is controlled by an `ENVIRONMENT`/`NODE_ENV` value, so dev and prod never
+share credentials or CORS origins:
+
+| Service | Template (committed) | Dev (gitignored) | Prod (gitignored) |
+|---|---|---|---|
+| Backend | `backend/.env.example` | `backend/.env.development` | `backend/.env.production` |
+| Frontend | `frontend/.env.example` | `frontend/.env.development` | `frontend/.env.production` |
+| Azure Function | `function/local.settings.json.example` | `function/local.settings.json` | Azure Portal → Application Settings |
+
+### Backend (`.env.development` / `.env.production`)
 
 ```env
 DATABASE_URL=postgresql://user:password@localhost:5432/notewise
 AZURE_STORAGE_CONNECTION_STRING=DefaultEndpointsProtocol=https;...
 AZURE_BLOB_CONTAINER=notewise-dev
+ALLOWED_ORIGINS=http://localhost:3000,http://localhost:3001
 OPENROUTER_API_KEY=sk-or-...
 ```
 
-### Frontend (`.env.local`)
+`app/config.py` reads `ENVIRONMENT` (defaults to `development`) to decide
+which of the two files to load.
+
+### Frontend (`.env.development` / `.env.production`)
 
 ```env
 NEXT_PUBLIC_API_URL=http://localhost:8000
 ```
+
+Next.js loads `.env.development` under `next dev` and `.env.production`
+under `next build`/`next start` automatically — no extra config needed.
 
 ### Azure Function (`local.settings.json`)
 
@@ -233,6 +254,10 @@ NEXT_PUBLIC_API_URL=http://localhost:8000
   }
 }
 ```
+
+Azure Functions has no `.env` mechanism — `local.settings.json` is its local
+dev equivalent, and production values are set directly as Application
+Settings in the Azure Portal (never as a checked-in file).
 
 ---
 

@@ -1,6 +1,7 @@
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 
+from app.config import settings
 from app.routes.health import router as health_router
 from app.routes.workspaces import router as workspaces_router
 from app.routes.sources import router as sources_router
@@ -11,16 +12,12 @@ from app.routes.deepdive import router as deepdive_router
 app = FastAPI()
 
 # ---------------------------------------------------------------------------
-# CORS — allow the Next.js dev server to talk to this API.
-# In production, replace the origins list with your real frontend domain(s).
+# CORS — allowed origins come from ALLOWED_ORIGINS in .env.development /
+# .env.production, so dev and prod get different origins automatically.
 # ---------------------------------------------------------------------------
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=[
-        "http://localhost:3000",
-        "http://localhost:3001",
-        "http://127.0.0.1:3000",
-    ],
+    allow_origins=settings.allowed_origins_list,
     allow_credentials=True,
     allow_methods=["*"],   # includes OPTIONS preflight
     allow_headers=["*"],   # includes X-User-Id and Content-Type
